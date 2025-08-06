@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -24,6 +21,4 @@ public class UserFollow extends CreatedAt{
     @ManyToOne
     @JoinColumn(name = "to_user_id", referencedColumnName = "id", nullable = false)
     private User toUser;
-
-
 }
