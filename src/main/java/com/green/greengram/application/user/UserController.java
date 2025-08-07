@@ -1,8 +1,12 @@
 package com.green.greengram.application.user;
 
+import com.green.greengram.application.user.model.UserSignInDto;
 import com.green.greengram.application.user.model.UserSignInReq;
 import com.green.greengram.application.user.model.UserSignUpReq;
+import com.green.greengram.config.jwt.JwtTokenManager;
 import com.green.greengram.config.model.ResultResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final JwtTokenManager jwtTokenManager;
 
     @PostMapping("/sign-up")
     public ResultResponse<?> signUp(@Valid @RequestPart UserSignUpReq req
@@ -26,8 +31,22 @@ public class UserController {
     }
 
     @PostMapping("/sign-in")
-    public  ResultResponse<?> signIn(@Valid @RequestBody UserSignInReq req) {
+    public ResultResponse<?> signIn(@Valid @RequestBody UserSignInReq req, HttpServletResponse response) {
         log.info("req: {}", req);
-        return null;
+        UserSignInDto userSignInDto = userService.signIn(req);
+        jwtTokenManager.issue(response, userSignInDto.getJwtUser());
+                return new ResultResponse<>("sign-in 성공", userSignInDto.getUserSignInRes());
+    }
+
+    @PostMapping("/sign-out")
+    public ResultResponse<?> signOut(HttpServletResponse response) {
+        jwtTokenManager.signOut(response);
+        return new ResultResponse<>("sign-out <성공>", 1);
+    }
+
+    @PostMapping("/reissue")
+    public ResultResponse<?> reissue(HttpServletResponse response, HttpServletRequest request) {
+        jwtTokenManager.reissue(request,response);
+        return new ResultResponse<>("AccessToken 재발행 성공", null);
     }
 }
