@@ -1,9 +1,8 @@
 package com.green.greengram.entity;
 
-import com.green.greengram.config.model.EnumUserRole;
+import com.green.greengram.config.enumcode.model.EnumUserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

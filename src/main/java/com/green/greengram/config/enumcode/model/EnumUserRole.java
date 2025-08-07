@@ -1,4 +1,4 @@
-package com.green.greengram.config.model;
+package com.green.greengram.config.enumcode.model;
 
 import com.green.greengram.config.enumcode.AbstractEnumCodeConverter;
 import com.green.greengram.config.enumcode.EnumMapperType;

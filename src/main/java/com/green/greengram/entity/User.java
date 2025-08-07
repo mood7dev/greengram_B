@@ -16,7 +16,7 @@ public class User extends UpdatedAt{
     private Long id;
 
     @Column(nullable = true, length = 30)
-    private String nick_name;
+    private String nickName;
 
     @Column(nullable = false, length = 50, unique = true)
     private String uid;
