@@ -1,5 +1,7 @@
 package com.green.greengram.application.user;
 
+import com.green.greengram.application.user.model.UserSignInDto;
+import com.green.greengram.application.user.model.UserSignInReq;
 import com.green.greengram.application.user.model.UserSignUpReq;
 import com.green.greengram.config.util.ImgUploadManager;
 import com.green.greengram.entity.User;
@@ -34,6 +36,12 @@ public class UserService {
         if(pic != null) {
             String savedFileName = imgUploadManager.saveProfilePic(user.getUserId(), pic);
             user.setPic(savedFileName);
+
+            //throw new RuntimeException();
         }
+    }
+
+    public UserSignInDto signIn(UserSignInReq req) {
+        return null;
     }
 }
