@@ -5,20 +5,22 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+@Entity
 @Getter
 @Setter
-@Entity
 @EqualsAndHashCode
-@IdClass(UserFollowId.class)
-public class UserFollow extends CreatedAt{
+public class UserFollow extends CreatedAt {
+    @EmbeddedId
+    private UserFollowIds userFollowIds;
 
-    @Id
+    //관계설정(FK)
     @ManyToOne
-    @JoinColumn(name = "from_user_id", referencedColumnName = "id", nullable = false)
+    @MapsId("fromUserId")
+    @JoinColumn(name = "from_user_id")
     private User fromUser;
 
-    @Id
     @ManyToOne
-    @JoinColumn(name = "to_user_id", referencedColumnName = "id", nullable = false)
+    @MapsId("toUserId")
+    @JoinColumn(name = "to_user_id")
     private User toUser;
 }
