@@ -3,14 +3,12 @@ package com.green.greengram.application.feed;
 import com.green.greengram.application.feed.model.FeedPostReq;
 import com.green.greengram.config.model.ResultResponse;
 import com.green.greengram.config.model.UserPrincipal;
+import com.green.greengram.entity.Feed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -20,7 +18,7 @@ import java.util.List;
 @RequestMapping("/feed")
 @RequiredArgsConstructor
 public class FeedController {
-    private FeedService feedService;
+    private final FeedService feedService;
 
     @PostMapping
     public ResultResponse<?> postFeed(@AuthenticationPrincipal UserPrincipal userPrincipal
@@ -28,8 +26,8 @@ public class FeedController {
             , @RequestPart(name = "pic") List<MultipartFile> pics) {
         log.info("signedUserId: {}", userPrincipal.getSignedUserId());
         log.info("req: {}", req);
-        log.info("pics: {}", pics.size());
-    return new ResultResponse<>("",null);
-        }
+        log.info("pics.size(): {}", pics.size());
+        feedService.postFeed(userPrincipal.getSignedUserId(), req, pics);
+        return new ResultResponse<>("피드 등록 완료", null);
     }
-
+}

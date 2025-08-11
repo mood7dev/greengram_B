@@ -1,21 +1,21 @@
 package com.green.greengram.entity;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
-@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 public class FeedPic extends CreatedAt {
-
     @EmbeddedId
-    private FeedPicIds id;
+    private FeedPicIds feedPicIds;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("feedId")
+    //관계설정
+    @ManyToOne
     @JoinColumn(name = "feed_id")
+    @MapsId("feedId")
     private Feed feed;
 }

@@ -9,11 +9,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class FeedPostReq {
-    private long writerUserId;
     @Size(max = 1_000)
     private String contents;
 
     @Size(max = 30)
     private String location;
 }
-

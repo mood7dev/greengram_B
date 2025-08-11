@@ -9,7 +9,7 @@ public class EnumMapperValue {
     private String code;
     private String value;
 
-    public EnumMapperValue(EnumMapperType enumMapperType){
+    public EnumMapperValue(EnumMapperType enumMapperType) {
         this.code = enumMapperType.getCode();
         this.value = enumMapperType.getValue();
     }

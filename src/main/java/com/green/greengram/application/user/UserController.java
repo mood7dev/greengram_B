@@ -35,18 +35,19 @@ public class UserController {
         log.info("req: {}", req);
         UserSignInDto userSignInDto = userService.signIn(req);
         jwtTokenManager.issue(response, userSignInDto.getJwtUser());
-                return new ResultResponse<>("sign-in 성공", userSignInDto.getUserSignInRes());
+        return new ResultResponse<>("sign-in 성공", userSignInDto.getUserSignInRes());
     }
 
     @PostMapping("/sign-out")
     public ResultResponse<?> signOut(HttpServletResponse response) {
         jwtTokenManager.signOut(response);
-        return new ResultResponse<>("sign-out <성공>", 1);
+        return new ResultResponse<>("sign-out 성공", null);
     }
 
     @PostMapping("/reissue")
     public ResultResponse<?> reissue(HttpServletResponse response, HttpServletRequest request) {
-        jwtTokenManager.reissue(request,response);
+        jwtTokenManager.reissue(request, response);
         return new ResultResponse<>("AccessToken 재발행 성공", null);
     }
+
 }

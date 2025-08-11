@@ -38,8 +38,8 @@ public class WebSecurityConfiguration {
                 // 세션을 이용한 공격이다. 세션을 어차피 안 쓰니까 비활성화
                 .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource())) // ⭐️⭐️⭐️
                 .authorizeHttpRequests(req -> req.requestMatchers(HttpMethod.POST, "/api/feed").hasAnyRole(EnumUserRole.USER_1.name())
-                        .requestMatchers("/api/v1/order").authenticated()
-                                                           .anyRequest().permitAll()
+                        .requestMatchers("/api/feed").authenticated()
+                        .anyRequest().permitAll()
                 )
 
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -62,4 +62,5 @@ public class WebSecurityConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
+
 }

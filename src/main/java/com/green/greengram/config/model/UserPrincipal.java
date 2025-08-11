@@ -1,5 +1,6 @@
 package com.green.greengram.config.model;
 
+
 import com.green.greengram.config.enumcode.model.EnumUserRole;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +18,8 @@ public class UserPrincipal implements UserDetails {
     private final long signedUserId;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(long memberId, List<EnumUserRole> roles) {
-        this.signedUserId = memberId;
+    public UserPrincipal(long signedUserId, List<EnumUserRole> roles) {
+        this.signedUserId = signedUserId;
         List<SimpleGrantedAuthority> list = new ArrayList<>();
         for(EnumUserRole role : roles){
             String roleName = String.format("ROLE_%s", role.name());
