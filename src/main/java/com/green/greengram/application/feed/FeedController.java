@@ -1,6 +1,6 @@
 package com.green.greengram.application.feed;
 
-import com.green.greengram.application.feed.model.FeedPostReq;
+import com.green.greengram.application.feed.model.*;
 import com.green.greengram.config.model.ResultResponse;
 import com.green.greengram.config.model.UserPrincipal;
 import com.green.greengram.entity.Feed;
@@ -27,7 +27,24 @@ public class FeedController {
         log.info("signedUserId: {}", userPrincipal.getSignedUserId());
         log.info("req: {}", req);
         log.info("pics.size(): {}", pics.size());
-        feedService.postFeed(userPrincipal.getSignedUserId(), req, pics);
-        return new ResultResponse<>("피드 등록 완료", null);
+        FeedPostRes result = feedService.postFeed(userPrincipal.getSignedUserId(), req, pics);
+        return new ResultResponse<>("피드 등록 완료", result);
+    }
+
+    //페이징, 피드(사진, 댓글(3개만))
+    //현재는 피드+사진만 (N+1로 처리)
+    @GetMapping
+    public ResultResponse<?> getFeedList(@AuthenticationPrincipal UserPrincipal userPrincipal
+            , @Valid @ModelAttribute FeedGetReq req) {
+        log.info("signedUserId: {}", userPrincipal.getSignedUserId());
+        log.info("req: {}", req);
+        FeedGetDto feedGetDto = FeedGetDto.builder()
+                .signedUserId(userPrincipal.getSignedUserId())
+                .startIdx((req.getPage() - 1) * req.getRowPerPage())
+                .size(req.getRowPerPage())
+                .build();
+        List<FeedGetRes> result = feedService.getFeedList(feedGetDto);
+        return new ResultResponse<>(String.format("rows: %d", result.size())
+                , result);
     }
 }
