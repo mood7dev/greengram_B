@@ -8,11 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -22,10 +18,11 @@ public class FeedCommentController {
     private final FeedCommentService feedCommentService;
 
     @PostMapping
-    public ResultResponse<?> postFeedComment(@AuthenticationPrincipal UserPrincipal userPrincipal
-                                             , @Valid @RequestBody FeedCommentPostReq req) {
-        log.info("signeduUserId: {}", userPrincipal.getSignedUserId());
+    public ResultResponse<?> postFeedComment(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                             @Valid @RequestBody FeedCommentPostReq req) {
+        log.info("signedUserId: {}", userPrincipal.getSignedUserId());
         log.info("req: {}", req);
-        return null;
+        long feedCommentId = feedCommentService.postFeedComment(userPrincipal.getSignedUserId(), req);
+        return new ResultResponse<>("댓글 등록 성공", true);
     }
 }

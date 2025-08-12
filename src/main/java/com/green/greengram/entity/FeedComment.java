@@ -11,21 +11,19 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeedComment extends UpdatedAt{
-
+public class FeedComment extends UpdatedAt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long feedCommentId;
 
     @ManyToOne
-    @JoinColumn(name = "feed_id", nullable = false)
+    @JoinColumn(name="feed_id", nullable=false)
     private Feed feed;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name="user_id", nullable = false)
     private User user;
 
     @Column(nullable = false, length = 150)
     private String comment;
 }
-
