@@ -1,9 +1,6 @@
 package com.green.greengram.application.user;
 
-import com.green.greengram.application.user.model.UserSignInDto;
-import com.green.greengram.application.user.model.UserSignInReq;
-import com.green.greengram.application.user.model.UserSignInRes;
-import com.green.greengram.application.user.model.UserSignUpReq;
+import com.green.greengram.application.user.model.*;
 import com.green.greengram.config.enumcode.model.EnumUserRole;
 import com.green.greengram.config.model.JwtUser;
 import com.green.greengram.config.util.ImgUploadManager;
@@ -41,7 +38,7 @@ public class UserService {
 
         userRepository.save(user);
 
-        if(pic != null) {
+        if (pic != null) {
             String savedFileName = imgUploadManager.saveProfilePic(user.getUserId(), pic);
             user.setPic(savedFileName);
         }
@@ -50,7 +47,7 @@ public class UserService {
     public UserSignInDto signIn(UserSignInReq req) {
         User user = userRepository.findByUid(req.getUid()); //일치하는 아이디가 있는지 확인, null이 넘어오면 uid가 없음
         //passwordEncoder 내부에는 jbcrypt 객체가 있다.
-        if(user == null || !passwordEncoder.matches(req.getUpw(), user.getUpw())) {
+        if (user == null || !passwordEncoder.matches(req.getUpw(), user.getUpw())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "아이디/비밀번호를 확인해 주세요.");
         }
         //user 튜플을 가져왔는데 user_role에 저장되어 있는 데이터까지 가져올 수 있었던건 양방향 관계 설정을 했기 때문에 가능
@@ -80,15 +77,7 @@ public class UserService {
                 .build();
     }
 
-    @Transactional
-    public void updateProfilePic(Long userId, MultipartFile pic) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
-
-        if (pic != null && !pic.isEmpty()) {
-            String savedFileName = imgUploadManager.saveProfilePic(userId, pic);
-            user.setPic(savedFileName);
-        }
+    public UserProfileGetRes getProfileUser(UserProfileGetDto dto) {
+   return null;
     }
-
 }

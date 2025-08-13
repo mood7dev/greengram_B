@@ -53,6 +53,11 @@ public class FeedCommentService {
     public void deleteFeedComment(long signedUserId,long feedCommentId) {
         FeedComment feedComment = feedCommentRepository.findById(feedCommentId).orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST, "feed_comment_id를 확인해 주세요."));
         //본인이 작성한 댓글이 아니라면 exception 터트림 "본인이 작성한 댓글이 아닙니다"
+        if(signedUserId != feedComment.getUser().getUserId()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "본인이 작성한 댓글이 아닙니다");
+        }
+        feedCommentRepository.deleteById(feedCommentId);
     }
 }
+
 

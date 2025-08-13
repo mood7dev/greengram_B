@@ -1,9 +1,7 @@
 package com.green.greengram.application.user;
 
 
-import com.green.greengram.application.user.model.UserSignInDto;
-import com.green.greengram.application.user.model.UserSignInReq;
-import com.green.greengram.application.user.model.UserSignUpReq;
+import com.green.greengram.application.user.model.*;
 import com.green.greengram.config.jwt.JwtTokenManager;
 import com.green.greengram.config.model.JwtUser;
 import com.green.greengram.config.model.ResultResponse;
@@ -55,13 +53,12 @@ public class UserController {
         return new ResultResponse<>("AccessToken 재발행 성공", null);
     }
 
-    @PostMapping("/update-pic")
-    public ResultResponse<?> updateProfilePic(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestPart MultipartFile pic
-    ) {
-        Long userId = userPrincipal.getSignedUserId(); // ✅ 로그인한 유저의 ID
-        userService.updateProfilePic(userId, pic);
-        return new ResultResponse<>("프로필 사진이 성공적으로 변경되었습니다.", null);
+    @GetMapping("/profile")
+    public ResultResponse<?> getProfileUser(@AuthenticationPrincipal UserPrincipal userPrincipal
+                                     , @RequestParam("profile_user_id") long profileUSerId) {
+        log.info("profileUSerId: {}", profileUSerId);
+        UserProfileGetDto dto = new UserProfileGetDto(userPrincipal.getSignedUserId(), profileUSerId);
+        UserProfileGetRes userProfileGetRes = userService.getProfileUser(dto);
+        return new ResultResponse<>("프로필 유저 정보.", userProfileGetRes);
     }
 }
