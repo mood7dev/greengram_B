@@ -5,12 +5,15 @@ import com.green.greengram.application.user.model.UserSignInDto;
 import com.green.greengram.application.user.model.UserSignInReq;
 import com.green.greengram.application.user.model.UserSignUpReq;
 import com.green.greengram.config.jwt.JwtTokenManager;
+import com.green.greengram.config.model.JwtUser;
 import com.green.greengram.config.model.ResultResponse;
+import com.green.greengram.config.model.UserPrincipal;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,4 +55,13 @@ public class UserController {
         return new ResultResponse<>("AccessToken 재발행 성공", null);
     }
 
+    @PostMapping("/update-pic")
+    public ResultResponse<?> updateProfilePic(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestPart MultipartFile pic
+    ) {
+        Long userId = userPrincipal.getSignedUserId(); // ✅ 로그인한 유저의 ID
+        userService.updateProfilePic(userId, pic);
+        return new ResultResponse<>("프로필 사진이 성공적으로 변경되었습니다.", null);
+    }
 }

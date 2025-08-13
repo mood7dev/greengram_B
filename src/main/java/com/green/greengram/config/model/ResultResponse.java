@@ -1,5 +1,6 @@
 package com.green.greengram.config.model;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

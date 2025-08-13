@@ -8,6 +8,7 @@ import com.green.greengram.application.feedcomment.FeedCommentMapper;
 import com.green.greengram.application.feedcomment.model.FeedCommentGetReq;
 import com.green.greengram.application.feedcomment.model.FeedCommentGetRes;
 import com.green.greengram.application.feedcomment.model.FeedCommentItem;
+import com.green.greengram.config.constants.ConstComment;
 import com.green.greengram.config.util.ImgUploadManager;
 import com.green.greengram.entity.Feed;
 import com.green.greengram.entity.User;
@@ -27,6 +28,7 @@ public class FeedService {
     private final FeedCommentMapper feedCommentMapper;
     private final FeedRepository feedRepository;
     private final ImgUploadManager imgUploadManager;
+    private final ConstComment constComment;
 
     @Transactional
     public FeedPostRes postFeed(long signedUserId, FeedPostReq req, List<MultipartFile> pics) {
@@ -50,24 +52,20 @@ public class FeedService {
 
     public List<FeedGetRes> getFeedList(FeedGetDto dto) {
         List<FeedGetRes> list = feedMapper.findAllLimitedTo(dto);
-        for (FeedGetRes feedGetRes : list) {
-            // 해당 피드 사진 리스트 세팅
+
+        for(FeedGetRes feedGetRes : list) {
             feedGetRes.setPics(feedMapper.findAllPicByFeedId(feedGetRes.getFeedId()));
-
-            // 해당 피드 댓글 4개 세팅
-            FeedCommentGetReq commentReq = new FeedCommentGetReq(feedGetRes.getFeedId(), 0, 4);
-            List<FeedCommentItem> commentList = feedCommentMapper.findAllByFeedIdLimitedTo(commentReq);
-
-            boolean moreComment = commentList.size() > 3;
-
-            // 댓글이 4개 이상이면 마지막 댓글을 삭제
-            if (moreComment) {
-                commentList.remove(commentList.size() - 1);  // 마지막 댓글 제거
-            }
-
+            //startIdx:0, size: 4
+            FeedCommentGetReq req = new FeedCommentGetReq(feedGetRes.getFeedId(), constComment.startIndex, constComment.needForViewCount);
+            List<FeedCommentItem> commentList = feedCommentMapper.findAllByFeedIdLimitedTo(req);
+            boolean moreComment = commentList.size() > constComment.needForViewCount; //row수가 4였을 때만 true가 담기고, row수가 0~3인 경우는 false가 담긴다.
             FeedCommentGetRes feedCommentGetRes = new FeedCommentGetRes(moreComment, commentList);
             feedGetRes.setComments(feedCommentGetRes);
+            if(moreComment) { //마지막 댓글 삭제
+                commentList.remove(commentList.size() - 1); //마지막 아이템 삭제
+            }
         }
         return list;
     }
+
 }

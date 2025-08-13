@@ -3,16 +3,15 @@
 <mapper namespace="com.green.greengram.application.feedcomment.FeedCommentMapper">
 
     <select id="findAllByFeedIdLimitedTo">
-        SELECT fc.feed_comment_id,
-        fc.comment,
-        u.user_id AS writerUserId,
-        u.uid AS writerUid,
-        u.nick_name AS writerNickName,
-        u.pic AS writerPic
+        SELECT fc.feed_comment_id, fc.comment
+        , u.user_id AS writerUserId, u.uid AS writerUid
+        , u.nick_name AS writerNickName, u.pic AS writerPic
         FROM feed_comment fc
-        INNER JOIN user u ON u.user_id = fc.user_id
-        WHERE feed_id = #{feedId}
-        ORDER BY fc.feed_comment_id DESC
-        LIMIT #{startIdx}, #{size}
+        INNER JOIN user u
+        ON u.user_id = fc.user_id
+        WHERE fc.feed_id = #{feedId}
+        ORDER BY fc.feed_comment_id
+        LIMIT #{startIdx}, #{sizePlusOne}
     </select>
+
 </mapper>

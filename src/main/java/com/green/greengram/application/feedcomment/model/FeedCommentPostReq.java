@@ -13,6 +13,6 @@ public class FeedCommentPostReq {
     private long feedId;
 
     @NotNull(message = "댓글 내용은 필수입니다.")
-    @Size(min = 2, max = 150 , message = "댓글 내용은 2자 이상 150자 이하만 가능합니다.")
+    @Size(min = 2, max = 150, message = "댓글 내용은 2자 이상 150자 이하만 가능합니다.")
     private String comment;
 }

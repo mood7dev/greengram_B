@@ -79,4 +79,16 @@ public class UserService {
                 .userSignInRes(userSignInRes) //FE에게 전달할 데이터
                 .build();
     }
+
+    @Transactional
+    public void updateProfilePic(Long userId, MultipartFile pic) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+
+        if (pic != null && !pic.isEmpty()) {
+            String savedFileName = imgUploadManager.saveProfilePic(userId, pic);
+            user.setPic(savedFileName);
+        }
+    }
+
 }

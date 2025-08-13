@@ -2,12 +2,10 @@ package com.green.greengram.application.feedcomment.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
 @Getter
-@Setter
 @AllArgsConstructor
 public class FeedCommentGetRes {
     private boolean moreComment; //댓글 더 있다 정보

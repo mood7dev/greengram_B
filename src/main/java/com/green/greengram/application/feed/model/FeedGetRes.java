@@ -1,6 +1,5 @@
 package com.green.greengram.application.feed.model;
 
-
 import com.green.greengram.application.feedcomment.model.FeedCommentGetRes;
 import lombok.Getter;
 import lombok.Setter;
