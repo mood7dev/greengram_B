@@ -8,6 +8,7 @@ import com.green.greengram.application.feedcomment.FeedCommentMapper;
 import com.green.greengram.application.feedcomment.model.FeedCommentGetReq;
 import com.green.greengram.application.feedcomment.model.FeedCommentGetRes;
 import com.green.greengram.application.feedcomment.model.FeedCommentItem;
+import com.green.greengram.application.user.UserMapper;
 import com.green.greengram.config.constants.ConstComment;
 import com.green.greengram.config.util.ImgUploadManager;
 import com.green.greengram.entity.Feed;
@@ -25,6 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FeedService {
     private final FeedMapper feedMapper;
+    private final UserMapper userMapper;
     private final FeedCommentMapper feedCommentMapper;
     private final FeedRepository feedRepository;
     private final ImgUploadManager imgUploadManager;
@@ -68,4 +70,24 @@ public class FeedService {
         return list;
     }
 
+    public List<FeedGetRes> getLikedFeedList(FeedGetDto dto) {
+        List<FeedGetRes> list = userMapper.findProfileByUserId(dto);
+
+        for (FeedGetRes feedGetRes : list) {
+            // 사진 설정
+            feedGetRes.setPics(feedMapper.findAllPicByFeedId(feedGetRes.getFeedId()));
+
+            // 댓글 설정
+            FeedCommentGetReq req = new FeedCommentGetReq(feedGetRes.getFeedId(), constComment.startIndex, constComment.needForViewCount);
+            List<FeedCommentItem> commentList = feedCommentMapper.findAllByFeedIdLimitedTo(req);
+            boolean moreComment = commentList.size() > constComment.needForViewCount;
+            FeedCommentGetRes feedCommentGetRes = new FeedCommentGetRes(moreComment, commentList);
+            feedGetRes.setComments(feedCommentGetRes);
+            if (moreComment) {
+                commentList.remove(commentList.size() - 1);
+            }
+        }
+
+        return list;
+    }
 }

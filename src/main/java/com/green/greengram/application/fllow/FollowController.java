@@ -21,6 +21,7 @@ public class FollowController {
                                          , @Valid @RequestBody FollowPostReq req ) {
         log.info("fromUserId: {}", userPrincipal.getSignedUserId());
         log.info("toUserId: {}", req.getToUserId());
+//        fllowService.postUserFollow(userPrincipal.getSinedUserId(), req.getToUserId());
     return new ResultResponse<>("팔로우 성공", null);
     }
 }

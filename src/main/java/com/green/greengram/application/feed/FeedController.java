@@ -55,4 +55,23 @@ public class FeedController {
         return new ResultResponse<>(String.format("rows: %d", result.size())
                 , result);
     }
+
+
+    @GetMapping("/likeList")
+    public ResultResponse<?> getLikedFeeds(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestParam int startIdx,
+            @RequestParam int size
+    ) {
+        FeedGetDto dto = FeedGetDto.builder()
+                .signedUserId(userPrincipal.getSignedUserId())
+                .startIdx(startIdx)
+                .size(size)
+                .build();
+
+        // 좋아요 게시물만 가져오는 서비스 메서드로 변경
+        List<FeedGetRes> list = feedService.getLikedFeedList(dto);
+        return new ResultResponse<>("좋아요 피드 리스트", list);
+    }
+
 }

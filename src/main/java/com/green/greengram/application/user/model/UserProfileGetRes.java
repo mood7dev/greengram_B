@@ -12,4 +12,7 @@ public class UserProfileGetRes {
     private int feedCount; //프로필 유저가 등록한 피드 수
     
     private int allFeedLikeCount; //나의 모든 피드에 좋아요 수
+
+    private int followerCount;
+    private int followingCount;
 }

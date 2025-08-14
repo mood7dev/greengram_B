@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.green.greengram.application.feed.UserMapper">
+<mapper namespace="com.green.greengram.application.user.UserMapper">
 
     <select id="findProfileByUserId">
-        SELECT
-        user_id,
-        pic,
-        created_at,
-        uid,
-        nick_name,
-        (SELECT COUNT(*) FROM feed WHERE writer_user_id = #{signedUserId}) AS feedCount,
-        (SELECT COUNT(*)
-        FROM feed_like fl
-        JOIN feed f ON fl.feed_id = f.feed_id
-        WHERE f.writer_user_id = #{signedUserId}
-        ) AS allFeedLikeCount
-        FROM user
-        WHERE user_id = #{signedUserId};
+    SELECT
+    f.feed_id,
+    f.contents,
+    f.location,
+    f.created_at,
+    f.writer_user_id,
+    u.uid AS writerUid,
+    u.nick_name AS writerNickName,
+    u.pic AS writerPic,
+    -- 내가 쓴 게시물 수
+    (SELECT COUNT(*) FROM feed WHERE writer_user_id = #{signedUserId}) AS feedCount,
+    -- 내가 누른 좋아요 총 개수
+    (SELECT COUNT(*) FROM feed_like WHERE user_id = #{signedUserId}) AS allFeedLikeCount
+    FROM feed_like fl
+    JOIN feed f ON fl.feed_id = f.feed_id
+    JOIN user u ON u.user_id = f.writer_user_id
+    WHERE fl.user_id = #{signedUserId}
+    ORDER BY f.feed_id DESC
+    LIMIT #{startIdx}, #{size};
     </select>
+
 </mapper>
