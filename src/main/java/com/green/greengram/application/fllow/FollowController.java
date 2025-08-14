@@ -17,11 +17,11 @@ public class FollowController {
     private final FollowService followService;
 
     @PostMapping
-    public ResultResponse<?> postUserFollw(@AuthenticationPrincipal UserPrincipal userPrincipal
-                                         , @Valid @RequestBody FollowPostReq req ) {
+    public ResultResponse<?> postUserFollow(@AuthenticationPrincipal UserPrincipal userPrincipal
+            , @Valid @RequestBody FollowPostReq req) {
         log.info("fromUserId: {}", userPrincipal.getSignedUserId());
         log.info("toUserId: {}", req.getToUserId());
-//        fllowService.postUserFollow(userPrincipal.getSinedUserId(), req.getToUserId());
-    return new ResultResponse<>("팔로우 성공", null);
+        followService.postUserFollow(userPrincipal.getSignedUserId(), req.getToUserId());
+        return new ResultResponse<>("팔로우 성공", null);
     }
 }

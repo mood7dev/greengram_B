@@ -5,10 +5,12 @@ import lombok.*;
 
 import java.io.Serializable;
 
-@Data
+@Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Embeddable
+@EqualsAndHashCode
 public class FeedLikeIds implements Serializable {
     private Long feedId;
     private Long userId;

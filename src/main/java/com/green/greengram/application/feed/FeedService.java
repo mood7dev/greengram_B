@@ -71,7 +71,7 @@ public class FeedService {
     }
 
     public List<FeedGetRes> getLikedFeedList(FeedGetDto dto) {
-        List<FeedGetRes> list = userMapper.findProfileByUserId(dto);
+        List<FeedGetRes> list = userMapper.selectUserLikedFeedList(dto);
 
         for (FeedGetRes feedGetRes : list) {
             // 사진 설정

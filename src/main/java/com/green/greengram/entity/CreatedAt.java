@@ -1,5 +1,6 @@
 package com.green.greengram.entity;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
