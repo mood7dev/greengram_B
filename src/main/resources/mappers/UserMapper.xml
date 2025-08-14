@@ -8,12 +8,14 @@
         pic,
         created_at,
         uid,
-        nickName,
-        (SELECT COUNT(*) FROM feed WHERE user_id = #{signedUserId}) AS feedCount,
-        (SELECT COUNT(*) FROM feed_like fl
-        JOIN feed f ON fl.feed_id = f.id
-        WHERE f.user_id = #{signedUserId}) AS allFeedLikeCount
+        nick_name,
+        (SELECT COUNT(*) FROM feed WHERE writer_user_id = #{signedUserId}) AS feedCount,
+        (SELECT COUNT(*)
+        FROM feed_like fl
+        JOIN feed f ON fl.feed_id = f.feed_id
+        WHERE f.writer_user_id = #{signedUserId}
+        ) AS allFeedLikeCount
         FROM user
-        WHERE user_id = #{signedUserId}
+        WHERE user_id = #{signedUserId};
     </select>
 </mapper>
