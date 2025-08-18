@@ -1,5 +1,6 @@
 package com.green.greengram.application.user.model;
 
+
 import lombok.Builder;
 import lombok.Getter;
 

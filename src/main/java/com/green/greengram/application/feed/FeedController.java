@@ -74,4 +74,11 @@ public class FeedController {
         return new ResultResponse<>("좋아요 피드 리스트", list);
     }
 
+    @DeleteMapping
+    public ResultResponse<?> deleteFeed(@AuthenticationPrincipal UserPrincipal userPrincipal
+                                       ,@Valid @RequestParam FeedDeleteReq req) {
+        log.info("deleteFeed - signedUserId: {}, feedId: {}", userPrincipal.getSignedUserId(), req.getFeedId());
+        feedService.deleteFeed(userPrincipal.getSignedUserId(), req.getFeedId());
+        return new ResultResponse<>("피드 삭제 완료", null);
+    }
 }

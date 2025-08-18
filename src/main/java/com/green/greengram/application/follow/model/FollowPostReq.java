@@ -1,4 +1,4 @@
-package com.green.greengram.application.fllow.model;
+package com.green.greengram.application.follow.model;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

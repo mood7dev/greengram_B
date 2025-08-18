@@ -1,4 +1,4 @@
-package com.green.greengram.application.fllow;
+package com.green.greengram.application.follow;
 
 import com.green.greengram.entity.UserFollow;
 import com.green.greengram.entity.UserFollowIds;

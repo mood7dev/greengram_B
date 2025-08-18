@@ -1,4 +1,4 @@
-package com.green.greengram.application.fllow;
+package com.green.greengram.application.follow;
 
 import com.green.greengram.entity.User;
 import com.green.greengram.entity.UserFollow;
@@ -14,10 +14,8 @@ public class FollowService {
     private final FollowRepository followRepository;
 
     public void postUserFollow(long fromUserId, long toUserId) {
-        UserFollowIds userFollowIds = UserFollowIds.builder()
-                .fromUserId(fromUserId)
-                .toUserId(toUserId)
-                .build();
+        UserFollowIds userFollowIds = getIds(fromUserId, toUserId);
+
         User fromUser = new User();
         fromUser.setUserId(fromUserId);
 
@@ -31,5 +29,17 @@ public class FollowService {
                 .build();
 
         followRepository.save(userFollow);
+    }
+
+    public void deleteUserFollow(long fromUserId, long toUserId) {
+        UserFollowIds userFollowIds = getIds(fromUserId, toUserId);
+        followRepository.deleteById(userFollowIds);
+    }
+
+    private UserFollowIds getIds(long fromUserId, long toUserId) {
+        return UserFollowIds.builder()
+                .fromUserId(fromUserId)
+                .toUserId(toUserId)
+                .build();
     }
 }

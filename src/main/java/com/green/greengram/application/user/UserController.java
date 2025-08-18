@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,10 +56,23 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResultResponse<?> getProfileUser(@AuthenticationPrincipal UserPrincipal userPrincipal
-                                     , @RequestParam("profile_user_id") long profileUSerId) {
-        log.info("profileUSerId: {}", profileUSerId);
-        UserProfileGetDto dto = new UserProfileGetDto(userPrincipal.getSignedUserId(), profileUSerId);
+            , @RequestParam("profile_user_id") long profileUserId) {
+        log.info("profileUserId: {}", profileUserId);
+        UserProfileGetDto dto = new UserProfileGetDto(userPrincipal.getSignedUserId(), profileUserId);
         UserProfileGetRes userProfileGetRes = userService.getProfileUser(dto);
-        return new ResultResponse<>("프로필 유저 정보.", userProfileGetRes);
+        return new ResultResponse<>("프로파일 유저 정보", userProfileGetRes);
+    }
+
+    @PatchMapping("/profile/pic")
+    public ResultResponse<?> patchProfilePic(@AuthenticationPrincipal UserPrincipal userPrincipal
+            , @RequestPart MultipartFile pic) {
+        String savedFileName = userService.patchProfilePic(userPrincipal.getSignedUserId(), pic);
+        return new ResultResponse<>("프로파일 사진 수정 완료", savedFileName);
+    }
+
+    @DeleteMapping("/profile/pic")
+    public ResponseEntity<?> deleteProfilePic(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        userService.deleteProfilePic(userPrincipal.getSignedUserId());
+        return ResponseEntity.ok("프로필 사진이 삭제되었습니다.");
     }
 }

@@ -14,5 +14,4 @@
         LIMIT #{startIdx}, #{sizePlusOne}
     </select>
 
-
 </mapper>

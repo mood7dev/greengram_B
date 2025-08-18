@@ -1,9 +1,6 @@
 package com.green.greengram.application.feed;
 
-import com.green.greengram.application.feed.model.FeedGetDto;
-import com.green.greengram.application.feed.model.FeedGetRes;
-import com.green.greengram.application.feed.model.FeedPostReq;
-import com.green.greengram.application.feed.model.FeedPostRes;
+import com.green.greengram.application.feed.model.*;
 import com.green.greengram.application.feedcomment.FeedCommentMapper;
 import com.green.greengram.application.feedcomment.model.FeedCommentGetReq;
 import com.green.greengram.application.feedcomment.model.FeedCommentGetRes;
@@ -89,5 +86,10 @@ public class FeedService {
         }
 
         return list;
+    }
+
+    public void deleteFeed(Long userId, Long feedId) {
+        Feed feed = feedRepository.findById(feedId).orElse(null);
+        feedRepository.delete(feed);
     }
 }

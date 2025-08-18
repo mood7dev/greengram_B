@@ -83,4 +83,23 @@ public class UserService {
     public UserProfileGetRes getProfileUser(UserProfileGetDto dto) {
         return userMapper.findProfileByUserId(dto);
     }
+
+    @Transactional
+    public String patchProfilePic(long signedUserId, MultipartFile pic) {
+        User user = userRepository.findById(signedUserId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 사용자입니다."));
+
+        imgUploadManager.removeProfileDirectory(signedUserId);
+        String savedFileName = imgUploadManager.saveProfilePic(signedUserId, pic);
+        user.setPic(savedFileName);
+        return savedFileName;
+    }
+
+    @Transactional
+    public void deleteProfilePic(long signedUserId) {
+        User user = userRepository.findById(signedUserId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 사용자입니다."));
+        imgUploadManager.removeProfileDirectory(signedUserId); // 사진 파일 삭제
+        user.setPic(null); // DB에 null로 업데이트
+    }
 }
