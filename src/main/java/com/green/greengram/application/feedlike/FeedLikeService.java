@@ -7,7 +7,9 @@ import com.green.greengram.entity.FeedLikeIds;
 import com.green.greengram.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @Service
@@ -22,7 +24,7 @@ public class FeedLikeService {
                 .build();
 
         FeedLike feedLike = feedLikeRepository.findById(feedLikeIds).orElse(null);
-        if(feedLike == null) { //좋아요가 아닌 상태
+        if(feedLike == null) { //좋아요가 아닌 상태   >>   좋아요인 상태로 변경
             Feed feed = Feed.builder()
                     .feedId(req.getFeedId())
                     .build();
@@ -31,11 +33,10 @@ public class FeedLikeService {
             user.setUserId(signedUserId);
 
             FeedLike feedLikeSave = FeedLike.builder()
-                    .feedLikeIds(feedLikeIds)
+                    .id(feedLikeIds)
                     .user(user)
                     .feed(feed)
                     .build();
-
 
             feedLikeRepository.save(feedLikeSave);
             return true;
