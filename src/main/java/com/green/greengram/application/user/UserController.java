@@ -48,6 +48,7 @@ public class UserController {
         return new ResultResponse<>("sign-out 성공", null);
     }
 
+
     @PostMapping("/reissue")
     public ResultResponse<?> reissue(HttpServletResponse response, HttpServletRequest request) {
         jwtTokenManager.reissue(request, response);
@@ -71,8 +72,8 @@ public class UserController {
     }
 
     @DeleteMapping("/profile/pic")
-    public ResponseEntity<?> deleteProfilePic(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResultResponse<?> patchProfilePic(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         userService.deleteProfilePic(userPrincipal.getSignedUserId());
-        return ResponseEntity.ok("프로필 사진이 삭제되었습니다.");
+        return new ResultResponse<>("프로파일 사진 삭제 완료", null);
     }
 }

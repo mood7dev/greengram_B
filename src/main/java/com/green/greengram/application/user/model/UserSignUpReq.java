@@ -3,10 +3,12 @@ package com.green.greengram.application.user.model;
 import com.green.greengram.config.enumcode.model.EnumUserRole;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import java.util.List;
 
 @Getter
+@Setter
 @ToString
 public class UserSignUpReq {
     @NotNull(message = "아이디는 필수로 입력하셔야 합니다.")
