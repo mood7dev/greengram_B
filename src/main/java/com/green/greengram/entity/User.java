@@ -22,6 +22,9 @@ public class User extends UpdatedAt{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
+    @Column(length = 100)
+    private String accessToken;
+
     @Column(nullable = false, length = 2)
     private SignInProviderType providerType;
 
@@ -45,7 +48,7 @@ public class User extends UpdatedAt{
     public void addUserRoles(List<EnumUserRole> enumUserRole) {
         for(EnumUserRole e : enumUserRole) {
             UserRoleIds ids = new UserRoleIds(this.userId, e);
-            UserRole userRole = new UserRole(ids,this);
+            UserRole userRole = new UserRole(ids, this);
 
             this.userRoles.add(userRole);
         }

@@ -1,14 +1,12 @@
 package com.green.greengram.application.user;
 
 import com.green.greengram.application.user.model.*;
+import com.green.greengram.config.constants.ConstOauth2Naver;
 import com.green.greengram.config.enumcode.model.EnumUserRole;
-import com.green.greengram.config.jwt.JwtTokenManager;
-import com.green.greengram.config.jwt.JwtTokenProvider;
 import com.green.greengram.config.model.JwtUser;
 import com.green.greengram.config.security.SignInProviderType;
 import com.green.greengram.config.util.ImgUploadManager;
 import com.green.greengram.entity.User;
-import com.green.greengram.entity.UserRole;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
 import java.util.List;
 
 @Slf4j
@@ -42,7 +45,7 @@ public class UserService {
         user.addUserRoles(req.getRoles());
 
         userRepository.save(user);
- 
+
         if(pic != null) {
             String savedFileName = imgUploadManager.saveProfilePic(user.getUserId(), pic);
             user.setPic(savedFileName);
@@ -50,7 +53,7 @@ public class UserService {
     }
 
     public UserSignInDto signIn(UserSignInReq req) {
-        User user = userRepository.findByUid(req.getUid()); //일치하는 아이디가 있는지 확인, null이 넘어오면 uid가 없음
+        User user = userRepository.findByUidAndProviderType(req.getUid(), SignInProviderType.LOCAL); //일치하는 아이디가 있는지 확인, null이 넘어오면 uid가 없음
         //passwordEncoder 내부에는 jbcrypt 객체가 있다.
         if(user == null || !passwordEncoder.matches(req.getUpw(), user.getUpw())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "아이디/비밀번호를 확인해 주세요.");
@@ -90,7 +93,6 @@ public class UserService {
     public String patchProfilePic(long signedUserId, MultipartFile pic) {
         User user = userRepository.findById(signedUserId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 사용자입니다."));
-
         imgUploadManager.removeProfileDirectory(signedUserId);
         String savedFileName = imgUploadManager.saveProfilePic(signedUserId, pic);
         user.setPic(savedFileName);
@@ -101,7 +103,7 @@ public class UserService {
     public void deleteProfilePic(long signedUserId) {
         User user = userRepository.findById(signedUserId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않는 사용자입니다."));
-        imgUploadManager.removeProfileDirectory(signedUserId); // 사진 파일 삭제
-        user.setPic(null); // DB에 null로 업데이트
+        imgUploadManager.removeProfileDirectory(signedUserId);
+        user.setPic(null);
     }
 }

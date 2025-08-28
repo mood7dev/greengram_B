@@ -7,9 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 @ConfigurationPropertiesScan
 @SpringBootApplication
 public class GreengramApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(GreengramApplication.class, args);
     }
-
 }

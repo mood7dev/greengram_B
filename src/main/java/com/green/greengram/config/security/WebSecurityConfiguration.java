@@ -30,6 +30,7 @@ public class WebSecurityConfiguration {
 
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
     private final TokenAuthenticationEntryPoint tokenAuthenticationEntryPoint;
+
     private final Oauth2AuthenticationRequestBasedOnCookieRepository repository;
     private final Oauth2AuthenticationSuccessHandler authenticationSuccessHandler;
     private final Oauth2AuthenticationFailureHandler authenticationFailureHandler;
@@ -57,15 +58,18 @@ public class WebSecurityConfiguration {
                         .requestMatchers("/api/feed/likeList").authenticated()
                         .anyRequest().permitAll()
                 )
+                //.addFilterBefore(tokenAuthenticationFilter, LogoutFilter.class)
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login(oauth2 -> oauth2.authorizationEndpoint( auth -> auth.baseUri(constOAuth2.baseUri)
                                         .authorizationRequestRepository(repository)
-                                ).redirectionEndpoint( redirection -> redirection.baseUri("/*/oauth2/code/*") )
+                                )
+                                .redirectionEndpoint( redirection -> redirection.baseUri(constOAuth2.redirectionBaseUri) )
                                 .userInfoEndpoint( userInfo -> userInfo.userService(myOauth2UserService) )
-                                .successHandler(authenticationSuccessHandler)
-                                .failureHandler(authenticationFailureHandler)
+                                .successHandler( authenticationSuccessHandler )
+                                .failureHandler( authenticationFailureHandler )
                 )
                 .addFilterBefore(new Oauth2AuthenticationCheckRedirectUriFilter(constOAuth2), OAuth2AuthorizationRequestRedirectFilter.class)
+                //.logout(logout -> logout.logoutUrl("/api/user/sign-out").deleteCookies("JSESSIONID", "Authorization", "RefreshToken"))
                 .exceptionHandling(e -> e.authenticationEntryPoint(tokenAuthenticationEntryPoint))
                 .build();
     }
@@ -87,7 +91,5 @@ public class WebSecurityConfiguration {
     public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
 
 }
-
-
 
 

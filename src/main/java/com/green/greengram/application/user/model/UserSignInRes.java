@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class UserSignInRes {
-    private long userId;
+    private Long userId;
     private String nickName;
     private String pic;
 }

@@ -7,10 +7,10 @@ import com.green.greengram.application.feedcomment.model.FeedCommentGetReq;
 import com.green.greengram.application.feedcomment.model.FeedCommentGetRes;
 import com.green.greengram.application.feedcomment.model.FeedCommentItem;
 import com.green.greengram.application.feedlike.FeedLikeRepository;
-import com.green.greengram.application.user.UserMapper;
 import com.green.greengram.config.constants.ConstComment;
 import com.green.greengram.config.util.ImgUploadManager;
-import com.green.greengram.entity.*;
+import com.green.greengram.entity.Feed;
+import com.green.greengram.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,19 +20,19 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class FeedService {
     private final FeedMapper feedMapper;
-    private final UserMapper userMapper;
     private final FeedCommentMapper feedCommentMapper;
+    private final FeedLikeRepository feedLikeRepository;
     private final FeedRepository feedRepository;
     private final ImgUploadManager imgUploadManager;
     private final ConstComment constComment;
     private final FeedCommentRepository feedCommentRepository;
-    private final FeedLikeRepository feedLikeRepository;
 
     @Transactional
     public FeedPostRes postFeed(long signedUserId, FeedPostReq req, List<MultipartFile> pics) {
@@ -72,6 +72,11 @@ public class FeedService {
         return list;
     }
 
+    public Set<String> getKeywordList(FeedKeywordGetReq req) {
+        return feedMapper.findAllByKeyword(req);
+    }
+
+    /*
     public List<FeedGetRes> getLikedFeedList(FeedGetDto dto) {
         List<FeedGetRes> list = userMapper.selectUserLikedFeedList(dto);
 
@@ -92,7 +97,7 @@ public class FeedService {
 
         return list;
     }
-
+*/
     @Transactional
     public void deleteFeed(long signedUserId, long feedId) {
         Feed feed = feedRepository.findById(feedId)
@@ -100,6 +105,7 @@ public class FeedService {
         if(feed.getWriterUser().getUserId() != signedUserId) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "피드 삭제 권한이 없습니다.");
         }
+
         //해당 피드 좋아요 삭제
         feedLikeRepository.deleteByIdFeedId(feedId);
 
@@ -112,4 +118,5 @@ public class FeedService {
         //해당 피드 사진 폴더 삭제
         imgUploadManager.removeFeedDirectory(feedId);
     }
+
 }

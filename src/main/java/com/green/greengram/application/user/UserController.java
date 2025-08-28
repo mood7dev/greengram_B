@@ -43,11 +43,11 @@ public class UserController {
     }
 
     @PostMapping("/sign-out")
-    public ResultResponse<?> signOut(HttpServletResponse response) {
+    public ResultResponse<?> signOut(@AuthenticationPrincipal UserPrincipal userPrincipal
+            , HttpServletResponse response) {
         jwtTokenManager.signOut(response);
         return new ResultResponse<>("sign-out 성공", null);
     }
-
 
     @PostMapping("/reissue")
     public ResultResponse<?> reissue(HttpServletResponse response, HttpServletRequest request) {

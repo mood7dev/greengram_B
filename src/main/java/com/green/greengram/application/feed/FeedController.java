@@ -1,9 +1,9 @@
 package com.green.greengram.application.feed;
 
+
 import com.green.greengram.application.feed.model.*;
 import com.green.greengram.config.model.ResultResponse;
 import com.green.greengram.config.model.UserPrincipal;
-import com.green.greengram.entity.Feed;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -22,8 +23,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FeedController {
     private final FeedService feedService;
-
     private final int MAX_PIC_COUNT = 10;
+
     @PostMapping
     public ResultResponse<?> postFeed(@AuthenticationPrincipal UserPrincipal userPrincipal
             , @Valid @RequestPart FeedPostReq req
@@ -51,13 +52,24 @@ public class FeedController {
                 .signedUserId(userPrincipal.getSignedUserId())
                 .startIdx((req.getPage() - 1) * req.getRowPerPage())
                 .size(req.getRowPerPage())
+                .profileUserId(req.getProfileUserId())
+                .keyword(req.getKeyword())
                 .build();
         List<FeedGetRes> result = feedService.getFeedList(feedGetDto);
         return new ResultResponse<>(String.format("rows: %d", result.size())
                 , result);
     }
 
+    @GetMapping("keyword")
+    public ResultResponse<?> getKeywordList(@Valid @ModelAttribute FeedKeywordGetReq req) {
+        log.info("req: {}", req);
+        Set<String> result = feedService.getKeywordList(req);
+        return new ResultResponse<>(String.format("rows: %d", result.size())
+                , result);
+    }
 
+
+/*
     @GetMapping("/likeList")
     public ResultResponse<?> getLikedFeeds(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
@@ -74,6 +86,7 @@ public class FeedController {
         List<FeedGetRes> list = feedService.getLikedFeedList(dto);
         return new ResultResponse<>("좋아요 피드 리스트", list);
     }
+*/
 
     @DeleteMapping
     public ResultResponse<?> deleteFeed(@AuthenticationPrincipal UserPrincipal userPrincipal
